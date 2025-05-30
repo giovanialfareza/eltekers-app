@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Eltekers Indonesia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      flex-direction: row;
+    }
+
+    .sidebar {
+      width: 277px;
+      height: 100vh;
+      background-color: white;
+      border-right: 2px solid #B5B5B5;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+
+    .app-logo {
+      position: absolute;
+      top: 24px;
+      left: 19px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .app-title {
+      position: absolute;
+      top: 32px;
+      left: 81px;
+      font-weight: 600;
+      font-size: 20px;
+      color: #1408FA;
+    }
+
+    /* Gaya umum semua tombol */
+    .nav-dashboard,
+    .nav-sasana,
+    .nav-analisa,
+    .nav-latihan,
+    .nav-settings {
+      width: 275px;
+      height: 47px;
+      border-radius: 10px;
+      position: absolute;
+      left: 0;
+      display: flex;
+      align-items: center;
+      padding-left: 23px;
+      font-weight: 500;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Styling nav-dashboard */
+    .nav-dashboard {
+      top: 100px;
+      background-color: #1408FA;
+      color: #FFFFFF;
+    }
+    
+    .nav-dashboard .text {
+      margin-left: 15px;
+    }
+
+    /* Styling tombol lain */
+    .nav-sasana { top: 147px; }
+    .nav-analisa { top: 194px; }
+    .nav-latihan { top: 246px; }
+    .nav-settings { top: 298px; }
+
+    .nav-sasana img,
+    .nav-analisa img,
+    .nav-latihan img,
+    .nav-settings img {
+      width: 23px;
+      height: 23px;
+    }
+
+    .nav-sasana .text,
+    .nav-analisa .text,
+    .nav-latihan .text,
+    .nav-settings .text {
+      margin-left: 15px;
+      color: #000;
+    }
+
+    .nav-sasana:hover,
+    .nav-analisa:hover,
+    .nav-latihan:hover,
+    .nav-settings:hover {
+      background-color: #BECEFC;
+    }
+
+    .main-content {
+      margin-left: 277px;
+      width: calc(100vw - 277px);
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: left;
+      background-color: #f9f9f9;
+      transition: margin-left 0.3s ease;
+    }
+
+    .ringkasan-statistik {
+      margin-top: 0px;
+      font-weight: bold;
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      text-align: left;
+      color: #000;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        display: none; /* Hide sidebar on mobile */
+      }
+
+      .sidebar.open {
+        display: block; /* Show sidebar when opened */
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="C:\Users\rzgvn\Downloads\Eltekers App\logo.jpg" alt="Eltekers Logo" class="app-logo">
+        <div class="app-title">Eltekers Indonesia</div>
+    
+        <div class="nav-dashboard">
+          <div class="text">Dashboard</div>
+        </div>
+    
+        <div class="nav-sasana">
+          <div class="text">Manajemen Sasana</div>
+        </div>
+
+        <div class="nav-analisa">
+          <div class="text">Manajemen Instruktur</div>
+        </div>
+    
+        <div class="nav-latihan">
+          <div class="text">Gerakan & Peraga</div>
+        </div>
+    
+        <div class="nav-settings">
+          <div class="text">Pengaturan</div>
+        </div>
+      </div>
+
+  <div class="main-content">
+    <div class="ringkasan-statistik">
+      <div>Ringkasan Statistik</div>
+    </div>
+  </div>
+</body>
+</html>
