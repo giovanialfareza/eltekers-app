@@ -100,8 +100,7 @@
       margin-left: 350px;
       padding: 50px;
       background-color: #f9f9f9;
-      width: calc(100% - 350px);
-      transition: margin-left 0.3s ease, width 0.3s ease;
+      transition: margin-left 0.3s ease;
     }
 
     .sidebar.closed ~ .main-content {
@@ -154,23 +153,6 @@
       background-color: #0f07d1; /* warna hover bisa dikurangin gelap dikit */
       border-color: #0f07d1;
       color: #ffffff;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        position: absolute;
-      }
-
-      .main-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
-      }
-
-      .toggle-btn {
-        left: 10px;
-      }
     }
   </style>
 </head>
