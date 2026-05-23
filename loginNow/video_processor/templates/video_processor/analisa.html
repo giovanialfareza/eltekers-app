@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Analisa Gerakan - Eltekers Indonesia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sidebar {
+      width: 350px;
+      min-height: 100vh;
+      background-color: white;
+      border-right: 2px solid #B5B5B5;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 0;
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.closed {
+      transform: translateX(-100%);
+    }
+
+    .sidebar .nav-link {
+      color: black;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+    }
+
+    .sidebar .nav-link.active {
+      background-color: #1408FA;
+      color: white;
+    }
+
+    .sidebar .nav-link.active img {
+      filter: invert(1);
+    }
+
+    .sidebar .nav-link:not(.active):hover {
+      background-color: #BECEFC;
+    }
+
+    .sidebar img.icon {
+      width: 23px;
+      height: 23px;
+      margin-right: 15px;
+    }
+
+    .app-logo {
+      width: 40px;
+      height: 40px;
+      margin-left: 20px;
+      margin-top: 20px;
+    }
+
+    .app-title {
+      font-weight: 600;
+      font-size: 20px;
+      color: #1408FA;
+      margin-left: 15px;
+      margin-right: 20px;
+      margin-top: 20px;
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: 15px;
+      left: 308px;
+      z-index: 1100;
+      background-color: #ffffff;
+      color: #7c7c7c;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 18px;
+      transition: left 0.5s ease;
+      cursor: pointer;
+    }
+
+    .toggle-btn:hover {
+      background-color: #1408FA;
+      color: #ffffff;
+    }
+
+    .sidebar.closed + .toggle-btn {
+      left: 0px;
+    }
+
+    .main-content {
+      margin-left: 350px;
+      padding: 50px;
+      background-color: #f9f9f9;
+      transition: margin-left 0.5s ease;
+    }
+
+    .sidebar.closed ~ .main-content {
+      margin-left: 0;
+    }
+
+    .upload-video {
+      width: 260px;
+      height: 50px;
+      margin-left: 0px;
+      background-color: #ffffff;
+      color: #7c7c7c;
+      border: 2px solid #7c7c7c;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.05zzem;
+      cursor: pointer;
+    }
+
+    .upload-video:hover {
+      background-color: #1408FA;
+      border-color: #1408FA;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  {% load static %}
+  <div class="sidebar d-flex flex-column" id="sidebar">
+    <div class="d-flex align-items-center mb-4">
+      <img src="{% static 'assets/logo.jpg' %}" alt="Eltekers Logo" class="app-logo" />
+      <div class="app-title">Eltekers Indonesia</div>
+    </div>
+
+    <a href="{% url "index" %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                <img src="{% static 'assets/home.png' %}" class="icon" alt="Home" />
+                <span>Home</span>
+            </a>
+            
+            <a href="{% url "cari_sasana_terdekat" %}" class="nav-link {% if request.resolver_match.url_name == 'cari_sasana_terdekat' %}active{% endif %}">
+                <img src="{% static 'assets/location.png' %}" class="icon" alt="cari_sasana_terdekat" />
+                Lokasi Sasana
+            </a>
+            
+            {% if user.level == 2 %}
+            <a href="{% url "analisa" %}" class="nav-link {% if request.resolver_match.url_name == 'analisa' %}active{% endif %}">
+                <img src="{% static 'assets/yoga.png' %}" class="icon" alt="Analisa" />
+                <span>Analisa Gerakan</span>
+            </a>
+            {% endif %}
+
+            {# Yang "user.level == 4" itu hapus saja kalau mode produksi #}
+            {% if user.level >= 2 or user.level == 5 %}
+            <a href="{% url "latihan" %}" class="nav-link {% if request.resolver_match.url_name == 'latihan' %}active{% endif %}">
+                <img src="{% static 'assets/weightlifting.png' %}" class="icon" alt="Latihan" />
+                <span>Latihan Gerakan</span>
+            </a>
+            {% endif %}
+            
+            {% if user.level == 3 %}
+            <a href="{% url "my-sasana-profile" %}" class="nav-link {% if request.resolver_match.url_name == 'my-sasana-profile' %}active{% endif %}">
+                <img src="{% static 'assets/kelola_data.png' %}" class="icon" alt="Data" />
+                <span>Kelola Data</span>
+            </a>
+            {% elif user.level == 2 %}
+            <a href="{% url "list-sasana" %}" class="nav-link {% if request.resolver_match.url_name == 'list-sasana' %}active{% endif %}">
+                <img src="{% static 'assets/kelola_data.png' %}" class="icon" alt="Data" />
+                <span>Kelola Data</span>
+            </a>
+            {% endif %}
+
+            {% if user.level == 1 %}
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == '#' %}active{% endif %}">
+                <img src="{% static 'assets/checklist.png' %}" class="icon" alt="Data" />
+                <span>Absensi</span>
+            </a>
+            {% endif %}
+
+            {% if user.level == 4 %}
+            <a href="{% url "list-sasana" %}" class="nav-link {% if request.resolver_match.url_name == 'list-sasana' %}active{% endif %}">
+                <img src="{% static 'assets/lihat_data.png' %}" class="icon" alt="Data" />
+                <span>Lihat Data</span>
+            </a>
+            {% endif %}
+            
+
+            {% if user.level == 4 %}
+            <a href="{% url "create-sasana" %}" class="nav-link {% if request.resolver_match.url_name == 'create-sasana' %}active{% endif %}">
+                <img src="{% static 'assets/kelola_data.png' %}" class="icon" alt="Data" />
+                <span>Tambah/Membuat Data</span>
+            </a>
+            {% endif %}
+
+            {% if user.is_staff and user.level == 5 %}
+            <a href="{% url "admin:index" %}" class="nav-link {% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}">
+                <img src="{% static 'assets/akun.png' %}" class="icon" alt="Admin" />
+                <span>Pengaturan Pengguna Akun</span>
+            </a>
+            {% endif %}
+            
+            {% if user.level >= 1 %}
+            <a href="{% url "home" %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <img src="{% static 'assets/settings.png' %}" class="icon" alt="Pengaturan" />
+                Pengaturan
+            </a>
+            {% else %}
+            <a href="{% url "account_login" %}" class="nav-link {% if request.resolver_match.url_name == 'account_login' %}active{% endif %}">
+                <img src="{% static 'assets/akun.png' %}" class="icon" alt="Akun" />
+                Akun
+            </a>
+            {% endif %}
+        </div>
+
+  <button id="toggleSidebar" class="toggle-btn">☰</button>
+
+  {% block content %}
+  {% if user.level >= 2 %}
+  <div class="main-content" id="mainContent">
+    <h4 class="fw-bold">Analisa Gerakan Anda Dengan Akurat</h4>
+    <p>Pantau dan evaluasi kualitas gerakan Anda secara otomatis untuk meningkatkan efektivitas terapi dan latihan.</p>
+
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'analisa' %}">
+      
+      {% csrf_token %}
+
+      <div class="d-flex align-items-center mb-4">
+        <button type="button" class="upload-video" onclick="document.getElementById('videoUpload').click()">Unggah Video Anda</button>
+        
+        <input type="file" id="videoUpload" name="video_file" accept="video/*" hidden />
+      </div>
+      
+      <div id="loadingIndicator" style="display: none; margin-top: 15px;">
+        <p><strong>Mengirim video ke server... Mohon menunggu.</strong></p>
+      </div>
+    </form>
+
+
+    <div id="jobStatusContainer" style="display: none;">
+        <h5>Status Pemrosean Video</h5>
+        <p id="statusMessage">Memuat Status...</p>
+        <div id="videoResultContainer">
+          <h6>Hasil Analisis : </h6>
+          <video controls id="result-video"></video>
+          <br>
+          <a href="#" id="download-btn" class="btn btn-success mt-3">Detail Video</a>
+        </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- <script>
+    const videoInput = document.getElementById('videoUpload');
+    const uploadForm = document.getElementById('uploadForm');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+
+    if (videoInput && uploadForm && loadingIndicator) {
+      videoInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+          // Tampilkan pesan file dipilih
+          console.log('Video dipilih:', this.files[0].name, '- Memulai pengiriman...');
+          
+          // Indikator Loading
+          loadingIndicator.style.display = 'block';
+          
+          //Auto Submit
+          uploadForm.submit();
+        }
+      });
+    }
+
+
+    // Script untuk sidebar
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    if(toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('closed');
+      });
+    }
+  </script> -->
+  <script>
+    const videoInput = document.getElementById('videoUpload');
+    const uploadForm = document.getElementById('uploadForm');
+    const jobStatusContainer = document.getElementById('jobStatusContainer');
+    const statusMessageElement = document.getElementById('statusMessage');
+    const videoResultContainer = document.getElementById('videoResultContainer');
+    const videoElement = document.getElementById('result-video');
+    const downloadButton = document.getElementById('download-btn');
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleSidebar');
+
+    // Logika pengiriman video
+    if (videoInput && uploadForm) {
+      videoInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+          uploadForm.submit();
+        }
+      });
+    }
+
+    // Logika sidebar
+    if(toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('closed');
+      });
+    }
+
+    // DAERAH PERUBAHAN UTAMA: Memeriksa dan memantau job yang sedang berjalan
+    function pollJobStatus() {
+      const jobId = localStorage.getItem('active_job_id');
+      if (!jobId) {
+        return; // Tidak ada job yang sedang berjalan
+      }
+
+      jobStatusContainer.style.display = 'block';
+      statusMessageElement.textContent = `Video Anda (Job ID: ${jobId}) sedang diproses...`;
+      
+      // URL API Anda di sini, sesuaikan jika perlu
+      const checkStatusUrl = `/check_status/${jobId}`;
+
+      const intervalId = setInterval(() => {
+        fetch(checkStatusUrl)
+          .then(response => response.json())
+          .then(data => {
+            statusMessageElement.textContent = `Status: ${data.status}`;
+            
+            if (data.status === 'completed') {
+              clearInterval(intervalId);
+              statusMessageElement.textContent = `Status: Selesai!`;
+              videoResultContainer.style.display = 'block';
+              videoElement.src = data.video_url;
+              downloadButton.href = data.video_url;
+              downloadButton.style.display = 'inline-block';
+              localStorage.removeItem('active_job_id'); // Hapus job dari localStorage
+            } else if (data.status === 'failed') {
+              clearInterval(intervalId);
+              statusMessageElement.textContent = `Error: ${data.error}`;
+              localStorage.removeItem('active_job_id');
+            }
+          })
+          .catch(err => {
+            console.error("Error fetching job status:", err);
+            clearInterval(intervalId);
+            statusMessageElement.textContent = `Error: Gagal memeriksa status.`;
+            localStorage.removeItem('active_job_id');
+          });
+      }, 5000); // Polling setiap 5 detik
+    }
+
+    // Panggil fungsi polling saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', pollJobStatus);
+  </script>
+  {% endblock %}
+</body>
+</html>
